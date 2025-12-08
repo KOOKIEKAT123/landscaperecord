@@ -65,15 +65,30 @@ class ApiService {
     required double lon,
     File? imageFile,
   }) async {
-    final request = http.MultipartRequest('PUT', Uri.parse(baseUrl));
+    // Use POST with 'action' or 'method' field set to 'update' if API expects it
+    // But try PUT first as some APIs support it
+    final request = http.MultipartRequest('POST', Uri.parse(baseUrl));
     request.fields['id'] = id.toString();
     request.fields['title'] = title;
     request.fields['lat'] = lat.toString();
     request.fields['lon'] = lon.toString();
+    // Some APIs use a method/action field to distinguish create vs update
+    request.fields['method'] = 'update';
 
     if (imageFile != null) {
+      // Determine MIME type based on file extension
+      String mimeType = 'image/jpeg';
+      final fileName = imageFile.path.toLowerCase();
+      if (fileName.endsWith('.png')) {
+        mimeType = 'image/png';
+      } else if (fileName.endsWith('.gif')) {
+        mimeType = 'image/gif';
+      } else if (fileName.endsWith('.webp')) {
+        mimeType = 'image/webp';
+      }
+      
       request.files.add(
-        await http.MultipartFile.fromPath('image', imageFile.path),
+        await http.MultipartFile.fromPath('image', imageFile.path, contentType: http.MediaType.parse(mimeType)),
       );
     }
 
@@ -81,19 +96,22 @@ class ApiService {
     final response = await http.Response.fromStream(streamed);
 
     if (response.statusCode != 200) {
-      throw Exception('Failed to update landmark (code: ${response.statusCode})');
+      print('Update failed. Status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      throw Exception('Failed to update landmark (code: ${response.statusCode}) - ${response.body}');
     }
   }
 
   Future<void> deleteLandmark(int id) async {
-    // Many simple PHP APIs expect ID in body for DELETE
+    // Send ID as query parameter
     final response = await http.delete(
-      Uri.parse(baseUrl),
-      body: {'id': id.toString()},
+      Uri.parse('$baseUrl?id=$id'),
     );
 
     if (response.statusCode != 200) {
-      throw Exception('Failed to delete landmark (code: ${response.statusCode})');
+      print('Delete failed. Status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      throw Exception('Failed to delete landmark (code: ${response.statusCode}) - ${response.body}');
     }
   }
 }

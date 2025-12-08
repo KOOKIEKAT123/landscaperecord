@@ -166,7 +166,18 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
       }
 
       if (mounted) {
-        Navigator.pop(context);
+        _showSnack('Success! Landmark ${widget.existing != null ? 'updated' : 'created'}');
+        // Reset form for next entry
+        _titleController.clear();
+        _latController.clear();
+        _lonController.clear();
+        setState(() {
+          _imageFile = null;
+        });
+        // Get fresh location for next entry
+        if (widget.existing == null) {
+          _getCurrentLocation();
+        }
       }
     } catch (e) {
       _showError(e.toString());

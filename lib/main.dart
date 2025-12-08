@@ -36,16 +36,16 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _index = 0;
 
-  final _screens = const [
-    OverviewScreen(),
-    RecordsScreen(),
-    NewEntryScreen(),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final screens = [
+      const OverviewScreen(),
+      const RecordsScreen(),
+      const NewEntryScreen(),
+    ];
+
     return Scaffold(
-      body: _screens[_index],
+      body: screens[_index],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _index,
         onTap: (i) => setState(() => _index = i),
