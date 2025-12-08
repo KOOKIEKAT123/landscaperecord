@@ -72,7 +72,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
         return Stack(
           children: [
             FlutterMap(
-              options: MapOptions(
+              options: const MapOptions(
                 center: bangladeshCenter,
                 zoom: 6.5,
               ),

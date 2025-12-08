@@ -39,7 +39,10 @@ class ApiService {
       final data = jsonDecode(response.body);
       return int.parse(data['id'].toString());
     } else {
-      throw Exception('Failed to create landmark (code: ${response.statusCode})');
+      // Log the response for debugging
+      print('Upload failed. Status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      throw Exception('Failed to create landmark (code: ${response.statusCode}) - ${response.body}');
     }
   }
 
