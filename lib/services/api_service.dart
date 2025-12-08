@@ -28,8 +28,20 @@ class ApiService {
     request.fields['title'] = title;
     request.fields['lat'] = lat.toString();
     request.fields['lon'] = lon.toString();
+    
+    // Determine MIME type based on file extension
+    String mimeType = 'image/jpeg';
+    final fileName = imageFile.path.toLowerCase();
+    if (fileName.endsWith('.png')) {
+      mimeType = 'image/png';
+    } else if (fileName.endsWith('.gif')) {
+      mimeType = 'image/gif';
+    } else if (fileName.endsWith('.webp')) {
+      mimeType = 'image/webp';
+    }
+    
     request.files.add(
-      await http.MultipartFile.fromPath('image', imageFile.path),
+      await http.MultipartFile.fromPath('image', imageFile.path, contentType: http.MediaType.parse(mimeType)),
     );
 
     final streamed = await request.send();

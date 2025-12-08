@@ -84,14 +84,14 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
     if (picked == null) return;
 
     final file = File(picked.path);
-    final resized = await _resizeImage(file);
+    final resized = await _resizeImage(file, picked.name);
 
     setState(() {
       _imageFile = resized;
     });
   }
 
-  Future<File> _resizeImage(File file) async {
+  Future<File> _resizeImage(File file, String originalFileName) async {
     final bytes = await file.readAsBytes();
     final img.Image? original = img.decodeImage(bytes);
     if (original == null) return file;
@@ -102,8 +102,20 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
       height: 600,
     );
 
-    final Uint8List encoded =
-        Uint8List.fromList(img.encodeJpg(resized, quality: 90));
+    // Determine format from original filename
+    final isPng = originalFileName.toLowerCase().endsWith('.png');
+    final isGif = originalFileName.toLowerCase().endsWith('.gif');
+    
+    Uint8List encoded;
+    
+    if (isPng) {
+      encoded = Uint8List.fromList(img.encodePng(resized));
+    } else if (isGif) {
+      encoded = Uint8List.fromList(img.encodeGif(resized));
+    } else {
+      // Default to JPEG (supports .jpg, .jpeg, or others)
+      encoded = Uint8List.fromList(img.encodeJpg(resized, quality: 90));
+    }
 
     await file.writeAsBytes(encoded);
     return file;
