@@ -49,7 +49,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
             width: 40,
             height: 40,
             point: LatLng(lm.lat, lm.lon),
-            builder: (ctx) => GestureDetector(
+            child: GestureDetector(
               onTap: () {
                 showModalBottomSheet(
                   context: context,
