@@ -78,7 +78,6 @@ class _OverviewScreenState extends State<OverviewScreen> {
               ),
               children: [
                 TileLayer(
-                  // You can change this URL to a dark-themed tile server if you want
                   urlTemplate:
                       'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                   subdomains: const ['a', 'b', 'c'],
@@ -147,7 +146,7 @@ class _LandmarkBottomSheet extends StatelessWidget {
                   icon: const Icon(Icons.edit),
                   label: const Text('Edit'),
                   onPressed: () async {
-                    Navigator.pop(context); // close sheet
+                    Navigator.pop(context); 
                     await Navigator.push(
                       context,
                       MaterialPageRoute(

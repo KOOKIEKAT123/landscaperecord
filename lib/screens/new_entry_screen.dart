@@ -73,7 +73,6 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
         _lonController.text = pos.longitude.toString();
       });
     } catch (_) {
-      // Could show a snackbar that GPS failed
     }
   }
 
@@ -102,7 +101,6 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
       height: 600,
     );
 
-    // Determine format from original filename
     final isPng = originalFileName.toLowerCase().endsWith('.png');
     final isGif = originalFileName.toLowerCase().endsWith('.gif');
     
@@ -113,7 +111,6 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
     } else if (isGif) {
       encoded = Uint8List.fromList(img.encodeGif(resized));
     } else {
-      // Default to JPEG (supports .jpg, .jpeg, or others)
       encoded = Uint8List.fromList(img.encodeJpg(resized, quality: 90));
     }
 
@@ -139,7 +136,6 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
 
     try {
       if (widget.existing == null) {
-        // New entry: image is required
         if (_imageFile == null) {
           _showError('Please select an image');
           setState(() => _isSubmitting = false);
@@ -154,7 +150,6 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
         );
         _showSnack('Landmark created');
       } else {
-        // Update: image optional
         await _api.updateLandmark(
           id: widget.existing!.id,
           title: title,
@@ -167,14 +162,12 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
 
       if (mounted) {
         _showSnack('Success! Landmark ${widget.existing != null ? 'updated' : 'created'}');
-        // Reset form for next entry
         _titleController.clear();
         _latController.clear();
         _lonController.clear();
         setState(() {
           _imageFile = null;
         });
-        // Get fresh location for next entry
         if (widget.existing == null) {
           _getCurrentLocation();
         }

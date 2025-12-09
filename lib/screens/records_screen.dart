@@ -85,9 +85,8 @@ class _RecordsScreenState extends State<RecordsScreen> {
                         ),
                       );
                       _reload();
-                      return false; // don't remove item from list
+                      return false; 
                     } else {
-                      // Delete
                       final confirmed = await showDialog<bool>(
                         context: context,
                         builder: (_) => AlertDialog(

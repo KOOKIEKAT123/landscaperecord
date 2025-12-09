@@ -29,7 +29,7 @@ class ApiService {
     request.fields['lat'] = lat.toString();
     request.fields['lon'] = lon.toString();
     
-    // Determine MIME type based on file extension
+
     String mimeType = 'image/jpeg';
     final fileName = imageFile.path.toLowerCase();
     if (fileName.endsWith('.png')) {
@@ -51,7 +51,6 @@ class ApiService {
       final data = jsonDecode(response.body);
       return int.parse(data['id'].toString());
     } else {
-      // Log the response for debugging
       print('Upload failed. Status: ${response.statusCode}');
       print('Response body: ${response.body}');
       throw Exception('Failed to create landmark (code: ${response.statusCode}) - ${response.body}');
@@ -65,18 +64,14 @@ class ApiService {
     required double lon,
     File? imageFile,
   }) async {
-    // Use POST with 'action' or 'method' field set to 'update' if API expects it
-    // But try PUT first as some APIs support it
     final request = http.MultipartRequest('POST', Uri.parse(baseUrl));
     request.fields['id'] = id.toString();
     request.fields['title'] = title;
     request.fields['lat'] = lat.toString();
     request.fields['lon'] = lon.toString();
-    // Some APIs use a method/action field to distinguish create vs update
     request.fields['method'] = 'update';
 
     if (imageFile != null) {
-      // Determine MIME type based on file extension
       String mimeType = 'image/jpeg';
       final fileName = imageFile.path.toLowerCase();
       if (fileName.endsWith('.png')) {
@@ -103,7 +98,6 @@ class ApiService {
   }
 
   Future<void> deleteLandmark(int id) async {
-    // Send ID as query parameter
     final response = await http.delete(
       Uri.parse('$baseUrl?id=$id'),
     );
