@@ -4,10 +4,10 @@ A Flutter project that shows landmark in OpenStreetMap. This allows user to add,
 
 ## Setup
 #Install Flutter Dependancies
-```text flutter pub get
+flutter pub get
 
 # Check Setup
-```text flutter pub get
+flutter pub get
 
 #Run
-```text flutter run
+flutter run
